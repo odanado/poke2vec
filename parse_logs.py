@@ -56,8 +56,8 @@ def cmd(save_dir, battle_logs_file):
 
     save_file.write_text(json.dumps({
         'ladder': ladder,
-        'players_list': players_list,
-        'pokes_list': pokes_list
+        'players': players_list,
+        'pokes': pokes_list
     }))
 
 
