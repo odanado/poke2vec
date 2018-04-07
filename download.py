@@ -99,14 +99,14 @@ def battle_logs(save_dir, replay_ids_file):
     save_file = save_dir / '{}_battle_logs.json'.format(ladder)
     battle_logs = {}
 
-    for user, replay_id_list in replay_ids.items():
+    for user, replay_id_list in sorted(replay_ids.items(), key=lambda x: x[0]):
         logger.info('user = {}'.format(user))
         logs = []
         for replay_id in replay_id_list:
             html = requests.get(REPLAY_URL.format(replay_id=replay_id)).text
             soup = BeautifulSoup(html, 'html.parser')
             time.sleep(1)
-            log = soup.find('script', {'class': 'log'})
+            log = soup.find('script', {'class': 'log'}).text
             assert len(log) != 0
             logs.append(log)
 
