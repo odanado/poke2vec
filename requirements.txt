@@ -2,3 +2,13 @@ beautifulsoup4
 requests
 click
 logzero
+jupyter
+pandas
+matplotlib
+autopep8
+chainer==3.5.0
+gensim
+opencv-python
+scikit-learn
+Pillow
+easydict
