@@ -1,4 +1,5 @@
 # poke2vec
+poke2vecは「パーティを文、ポケモンを単語」と見なすことで、word2vecを適用し、ポケモンの意味ベクトルを計算する手法です
 
 ## download
 ```bash
