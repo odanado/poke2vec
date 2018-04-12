@@ -36,7 +36,7 @@
 <script>
 export default {
   data: () => ({
-    drawer: null,
+    drawer: false,
     items: [
       { icon: 'home', text: 'Home', path: '/' },
       { icon: 'compare_arrows', text: 'Most Similar', path: '/MostSimilar' },
