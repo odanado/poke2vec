@@ -2,7 +2,9 @@
   <v-app id="inspire">
     <NaviGationDrawer />
     <v-content>
-      <v-container fluid>
+      <v-container
+        fluid
+        grid-list-md>
         <router-view/>
       </v-container>
     </v-content>
@@ -24,7 +26,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons);
 
 #app {
@@ -35,4 +37,18 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+
 </style>
