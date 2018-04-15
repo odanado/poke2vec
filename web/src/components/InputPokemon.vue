@@ -3,7 +3,9 @@
     row
     wrap>
 
-    <v-flex xs10>
+    <v-flex
+      xs8
+      sm10>
       <v-select
         :items="items"
         v-model="selectedName"
@@ -11,7 +13,9 @@
         label="ポケモン名"/>
     </v-flex>
 
-    <v-flex xs1>
+    <v-flex
+      xs2
+      sm1>
       <v-btn
         @click="add('+')"
         dark
@@ -22,7 +26,9 @@
       </v-btn>
     </v-flex>
 
-    <v-flex xs1>
+    <v-flex
+      xs2
+      sm1>
       <v-btn
         @click="add('-')"
         dark
