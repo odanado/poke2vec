@@ -21,8 +21,8 @@ import InputPokemon from '@/components/InputPokemon';
 import PolarityPokemons from '@/components/PolarityPokemons';
 import ShowSimiliar from '@/components/ShowSimiliar';
 
-import translate from '@/lib/translate';
-import { mostSimilar, convertPoke2vec } from '@/lib/poke2vec';
+import translate from '@/modules/translate';
+import { mostSimilar, convertPoke2vec } from '@/modules/poke2vec';
 
 const poke2vec = require('@/data/gen7vgc2018_ns_64_poke2vec.json');
 
