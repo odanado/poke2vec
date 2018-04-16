@@ -4,7 +4,8 @@
       <template v-for="(item, index) in items">
         <PolarityPokemon
           :item="item"
-          :key="index" />
+          :key="index"
+          @deletePokemon="deletePokemon"/>
         <v-divider
           v-if="items.length !== index + 1"
           :key="'divider_' + index" />
@@ -26,6 +27,11 @@ export default {
     items: {
       type: Array,
       required: true,
+    },
+  },
+  methods: {
+    deletePokemon(index) {
+      this.$emit('deletePokemon', index);
     },
   },
 };

@@ -9,8 +9,13 @@
       <InputPokemon
         :items="inputPokemons"
         @addPokemon="addPokemon"/>
-      <PolarityPokemons :items="polarityPokemons"/>
-      <ShowSimiliar :items="showPokemons"/>
+
+      <PolarityPokemons
+        :items="polarityPokemons"
+        @deletePokemon="deletePokemon"/>
+
+      <ShowSimiliar
+        :items="showPokemons"/>
     </v-layout>
   </div>
 </template>
@@ -44,7 +49,10 @@ export default {
   },
   methods: {
     addPokemon(pokemon) {
-      this.polarityPokemons.push(pokemon);
+      this.polarityPokemons.push({ index: this.polarityPokemons.length, ...pokemon });
+    },
+    deletePokemon(index) {
+      this.polarityPokemons.splice(index, 1);
     },
   },
   data: () => ({

@@ -16,7 +16,8 @@
     <v-list-tile-action>
       <v-btn
         icon
-        ripple>
+        ripple
+        @click="deleteItem">
         <v-icon color="grey lighten-1">delete</v-icon>
       </v-btn>
     </v-list-tile-action>
@@ -29,6 +30,11 @@ export default {
     item: {
       type: Object,
       required: true,
+    },
+  },
+  methods: {
+    deleteItem() {
+      this.$emit('deletePokemon', this.item.index);
     },
   },
   computed: {

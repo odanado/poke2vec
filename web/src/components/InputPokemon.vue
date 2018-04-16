@@ -53,8 +53,10 @@ export default {
   },
   methods: {
     add(polarity) {
-      this.$emit('addPokemon', { polarity, ...this.selectedName });
-      this.selectedName = null;
+      if (this.selectedName) {
+        this.$emit('addPokemon', { polarity, ...this.selectedName });
+        this.selectedName = null;
+      }
     },
   },
   data: () => ({
