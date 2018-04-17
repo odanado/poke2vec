@@ -11,7 +11,7 @@
         slot="items"
         slot-scope="props">
         <td>{{ props.item.text }}</td>
-        <td class="text-xs-right">{{ props.item.similarity }}</td>
+        <td class="text-xs-right">{{ String(props.item.similarity).substr(0, 4) }}</td>
       </template>
     </v-data-table>
   </v-flex>
