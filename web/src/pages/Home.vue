@@ -3,6 +3,6 @@
     justify-center
     align-center
   >
-    This is Home.
+    <div class="home">This is Home.</div>
   </v-layout>
 </template>
