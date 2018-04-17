@@ -10,7 +10,8 @@
         :items="items"
         v-model="selectedName"
         return-object
-        label="ポケモン名"/>
+        label="ポケモン名"
+        class="selected-name"/>
     </v-flex>
 
     <v-flex
@@ -68,5 +69,8 @@ export default {
 <style scoped>
 .icon {
   display: inline-flex
+}
+.selected-name {
+  white-space: nowrap
 }
 </style>
