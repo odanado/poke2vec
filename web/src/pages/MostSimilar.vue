@@ -25,6 +25,15 @@
           @change="changeTopN"/>
       </v-flex>
 
+      <v-flex
+        xs4>
+        <v-select
+          :items="orderItems"
+          v-model="selectedOrder"
+          return-object
+          label="並び順"/>
+      </v-flex>
+
       <InputPokemon
         :items="inputPokemons"
         @addPokemon="addPokemon"/>
@@ -57,6 +66,10 @@ const poke2vecs = new Map(Object.entries({
 /* eslint-enable global-require */
 
 export default {
+  created() {
+    this.selectedPoke2vec = this.poke2vecItems[0];
+    this.selectedOrder = this.orderItems[0];
+  },
   components: {
     InputPokemon,
     PolarityPokemons,
@@ -83,6 +96,11 @@ export default {
       { text: 'シングルバトル 64次元', value: 'gen7battlespotsingles_ns_64' },
     ],
     selectedPoke2vec: null,
+    orderItems: [
+      { text: '名前順', value: 'alphabet' },
+      { text: '頻度順', value: 'freq' },
+    ],
+    selectedOrder: null,
   }),
   computed: {
     poke2vec() {
@@ -95,11 +113,13 @@ export default {
     inputPokemons() {
       let ret = this.poke2vec.map(x => ({ text: translate(x.name, 'Japanese'), value: x.name }));
       ret = ret.slice(0, this.topN);
-      ret.sort((a, b) => {
-        if (a.text < b.text) return -1;
-        if (a.text > b.text) return 1;
-        return 0;
-      });
+      if (this.selectedOrder.value === 'alphabet') {
+        ret.sort((a, b) => {
+          if (a.text < b.text) return -1;
+          if (a.text > b.text) return 1;
+          return 0;
+        });
+      }
       return ret;
     },
     showPokemons() {
