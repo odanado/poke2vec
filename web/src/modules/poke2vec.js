@@ -21,7 +21,7 @@ const toUnitVec = (xs) => {
 };
 
 
-export const mostSimilar = (unitVec, vocab, positive, negative) => {
+export const mostSimilar = (unitVec, vocab, positive, negative, topN) => {
   const used = new Set([...positive, ...negative]);
 
   // (num, dim)
@@ -47,7 +47,7 @@ export const mostSimilar = (unitVec, vocab, positive, negative) => {
 
   const results = [];
   vocab.forEach((v, k) => {
-    if (!used.has(k)) {
+    if (!used.has(k) && v < topN) {
       results.push({ id: k, similarity: cosSim(unitMean, unitVec[v]) });
     }
   });
