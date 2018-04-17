@@ -13,7 +13,8 @@
           v-model="selectedPoke2vec"
           return-object
           label="ルール"
-          class="selecte-poke2vec"/>
+          class="selecte-poke2vec"
+          @change="changePoke2vec"/>
       </v-flex>
 
       <v-flex
@@ -84,6 +85,9 @@ export default {
     },
     deletePokemon(index) {
       this.polarityPokemons.splice(index, 1);
+    },
+    changePoke2vec() {
+      this.polarityPokemons = [];
     },
   },
   data: () => ({
