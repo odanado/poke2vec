@@ -6,9 +6,18 @@
       row
       wrap
     >
+      <v-flex
+        xs4>
+        <v-select
+          :items="poke2vecItems"
+          v-model="selectedPoke2vec"
+          return-object
+          label="ルール"
+          class="selecte-poke2vec"/>
+      </v-flex>
 
       <v-flex
-        xs12>
+        xs4>
         <v-select
           :items="topNRange"
           v-model="topN"
@@ -39,7 +48,13 @@ import ShowSimiliar from '@/components/ShowSimiliar';
 import translate from '@/modules/translate';
 import { mostSimilar, convertPoke2vec } from '@/modules/poke2vec';
 
-const poke2vec = require('@/data/gen7vgc2018_ns_64_poke2vec.json');
+
+/* eslint-disable global-require */
+const poke2vecs = new Map(Object.entries({
+  gen7vgc2018_ns_64: require('@/data/gen7vgc2018_ns_64_poke2vec.json'),
+  gen7battlespotsingles_ns_64: require('@/data/gen7battlespotsingles_ns_64_poke2vec.json'),
+}));
+/* eslint-enable global-require */
 
 export default {
   components: {
@@ -59,14 +74,26 @@ export default {
     },
   },
   data: () => ({
-    topN: 100,
     polarityPokemons: [],
+    topN: 50,
     // range(10, 101, 10)
     topNRange: [...Array(10).keys()].map(x => (x + 1) * 10),
+    poke2vecItems: [
+      { text: 'VGC2018 64次元', value: 'gen7vgc2018_ns_64' },
+      { text: 'シングルバトル 64次元', value: 'gen7battlespotsingles_ns_64' },
+    ],
+    selectedPoke2vec: null,
   }),
   computed: {
+    poke2vec() {
+      const { value } = this.selectedPoke2vec;
+      if (poke2vecs.has(value)) {
+        return poke2vecs.get(value);
+      }
+      return [];
+    },
     inputPokemons() {
-      let ret = poke2vec.map(x => ({ text: translate(x.name, 'Japanese'), value: x.name }));
+      let ret = this.poke2vec.map(x => ({ text: translate(x.name, 'Japanese'), value: x.name }));
       ret = ret.slice(0, this.topN);
       ret.sort((a, b) => {
         if (a.text < b.text) return -1;
@@ -85,11 +112,11 @@ export default {
       return [];
     },
     vocab() {
-      const { vocab } = convertPoke2vec(poke2vec);
+      const { vocab } = convertPoke2vec(this.poke2vec);
       return vocab;
     },
     unitVec() {
-      const { unitVec } = convertPoke2vec(poke2vec);
+      const { unitVec } = convertPoke2vec(this.poke2vec);
       return unitVec;
     },
   },
@@ -104,4 +131,7 @@ export default {
   margin-bottom: 20px;
 }
 
+.selecte-poke2vec {
+  white-space: nowrap
+}
 </style>
