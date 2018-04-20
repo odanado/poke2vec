@@ -69,3 +69,10 @@ export const convertPoke2vec = (data) => {
   });
   return { vocab, unitVec };
 };
+
+if (process.env.NODE_ENV === 'testing') {
+  module.exports.dot = dot;
+  module.exports.l2norm = l2norm;
+  module.exports.cosSim = cosSim;
+  module.exports.toUnitVec = toUnitVec;
+}
