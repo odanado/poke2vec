@@ -3,5 +3,8 @@
   "eslint.validate": [
     "javascript",
     {"autoFix": true, "language": "vue"}
+  ],
+  "eslint.workingDirectories": [
+    ".storybook"
   ]
 }

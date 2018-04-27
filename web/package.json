@@ -9,8 +9,10 @@
     "start": "npm run dev",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
-    "lint": "eslint --ext .js,.vue src test/unit",
-    "build": "node build/build.js"
+    "lint": "eslint --ext .js,.vue src test/unit .storybook",
+    "build": "node build/build.js",
+    "storybook": "start-storybook -p 9002 -c .storybook",
+    "buid-storybook": "build-storybook -s public"
   },
   "dependencies": {
     "material-design-icons": "^3.0.1",
@@ -19,6 +21,7 @@
     "vuetify": "^1.0.14"
   },
   "devDependencies": {
+    "@storybook/vue": "^3.4.2",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^8.2.1",
