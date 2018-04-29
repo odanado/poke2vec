@@ -12,6 +12,8 @@
 
 <script>
 
+import Canvas2DWrapper from '@/modules/canvas_2d_wrapper';
+
 const poke2numOriginal = require('@/data/poke2num');
 
 const calcPos = num => ({
@@ -34,19 +36,10 @@ export default {
     },
   },
   mounted() {
-    const poke2num = new Map();
-    poke2numOriginal.forEach((x) => {
-      poke2num.set(x[0], x[1]);
-    });
-    this.canvas = this.$refs.visualizer2d;
-    this.ctx = this.canvas.getContext('2d');
+    this.wrapper = new Canvas2DWrapper(this.$refs.visualizer2d);
 
-    this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    this.xform = this.svg.createSVGMatrix();
-    this.point = this.svg.createSVGPoint();
-
-    this.last.x = this.canvas.width / 2;
-    this.last.y = this.canvas.height / 2;
+    this.last.x = this.wrapper.canvas.width / 2;
+    this.last.y = this.wrapper.canvas.height / 2;
 
     this.miniIcons = new Image();
     this.miniIcons.src = '/static/smicons-sheet.png';
@@ -65,56 +58,42 @@ export default {
 
       const { xs, ys } = this.vectors;
       const { width, height } = this.icon;
+      const factor = this.wrapper.getScaleFactor();
       this.names.forEach((name, i) => {
-        const dx = (xs[i] * this.canvas.width);
-        const dy = (ys[i] * this.canvas.height);
+        const dx = (xs[i] * this.wrapper.canvas.width);
+        const dy = (ys[i] * this.wrapper.canvas.height);
 
         const { top, left } = calcPos(this.poke2num.get(name));
-        this.ctx.drawImage(this.miniIcons, left, top, width, height, dx, dy, width / this.xform.a, height / this.xform.d);
+        this.wrapper.ctx.drawImage(this.miniIcons,
+          left, top, width, height,
+          dx, dy, width / factor.x, height / factor.y);
       });
     },
     reset() {
-      const p1 = this.transformedPoint(0, 0);
-      const p2 = this.transformedPoint(this.canvas.width, this.canvas.height);
-      this.ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
-    },
-    zoom(isZoomUp) {
-      const point = this.transformedPoint(this.last.x, this.last.y);
-
-      this.xform = this.xform.translate(point.x, point.y);
-      this.ctx.translate(point.x, point.y);
-
-      const baseFactor = 1.1;
-      const factor = isZoomUp ? 1 / baseFactor : baseFactor;
-
-      console.log(factor, this.xform);
-      this.xform = this.xform.scaleNonUniform(factor, factor);
-      console.log(factor, this.xform);
-      this.ctx.scale(factor, factor);
-
-      this.xform = this.xform.translate(-point.x, -point.y);
-      this.ctx.translate(-point.x, -point.y);
-
-      this.draw();
+      const p1 = this.wrapper.transformedPoint(0, 0);
+      const p2 = this.wrapper.transformedPoint(
+        this.wrapper.canvas.width, this.wrapper.canvas.height);
+      this.wrapper.ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
     },
     mouseWheel(e) {
-      this.zoom(e.wheelDelta > 0);
+      const factor = e.wheelDelta > 0 ? 1 / this.baseFactor : this.baseFactor;
+      this.wrapper.zoom(this.last, factor);
+      this.draw();
     },
     mouseDown(e) {
       this.last.x = e.offsetX || (e.pageX - this.canvas.offsetLeft);
       this.last.y = e.offsetY || (e.pageY - this.canvas.offsetTop);
-      this.startDragPos = this.transformedPoint(this.last.x, this.last.y);
+      this.startDragPos = this.wrapper.transformedPoint(this.last.x, this.last.y);
     },
     mouseMove(e) {
       if (this.dragging) {
         this.last.x = e.offsetX || (e.pageX - this.canvas.offsetLeft);
         this.last.y = e.offsetY || (e.pageY - this.canvas.offsetTop);
-        const point = this.transformedPoint(this.last.x, this.last.y);
+        const point = this.wrapper.transformedPoint(this.last.x, this.last.y);
 
         const dx = point.x - this.startDragPos.x;
         const dy = point.y - this.startDragPos.y;
-        this.xform = this.xform.translate(dx, dy);
-        this.ctx.translate(dx, dy);
+        this.wrapper.translate(dx, dy);
 
         this.draw();
       }
@@ -125,7 +104,7 @@ export default {
   },
   data: () => ({
     startDragPos: null,
-    zoomRatio: 1,
+    baseFactor: 1.1,
     last: {
       x: 0,
       y: 0,
