@@ -40,7 +40,7 @@ export default {
     items: [
       { icon: 'home', text: 'Home', path: '/' },
       { icon: 'compare_arrows', text: 'Most Similar', path: '/MostSimilar' },
-      { icon: 'apps', text: '2D Visualizer', path: '/2DVisualizer' },
+      { icon: 'apps', text: '2D Visualizer', path: '/Visualizer2d' },
       { icon: '3d_rotation', text: '3D Visualizer', path: '/3DVisualizer' },
     ],
   }),
