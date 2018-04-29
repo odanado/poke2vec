@@ -12,8 +12,6 @@
 
 <script>
 
-import Vue from 'vue';
-
 const poke2numOriginal = require('@/data/poke2num');
 
 const calcPos = num => ({
@@ -47,6 +45,9 @@ export default {
     this.xform = this.svg.createSVGMatrix();
     this.point = this.svg.createSVGPoint();
 
+    this.last.x = this.canvas.width / 2;
+    this.last.y = this.canvas.height / 2;
+
     this.miniIcons = new Image();
     this.miniIcons.src = '/static/smicons-sheet.png';
     this.miniIcons.onload = () => {
@@ -65,37 +66,55 @@ export default {
       const { xs, ys } = this.vectors;
       const { width, height } = this.icon;
       this.names.forEach((name, i) => {
-        const dx = ((xs[i] * this.canvas.width) + this.offset.x) * this.zoomRatio;
-        const dy = ((ys[i] * this.canvas.height) + this.offset.y) * this.zoomRatio;
+        const dx = (xs[i] * this.canvas.width);
+        const dy = (ys[i] * this.canvas.height);
 
         const { top, left } = calcPos(this.poke2num.get(name));
-        this.ctx.drawImage(this.miniIcons, left, top, width, height, dx, dy, width, height);
+        this.ctx.drawImage(this.miniIcons, left, top, width, height, dx, dy, width / this.xform.a, height / this.xform.d);
       });
     },
     reset() {
-      this.ctx.fillStyle = 'white';
-      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-      // 枠線
-      this.ctx.strokeStyle = 'rgb(00,00,255)';
-      this.ctx.strokeRect(0, 0, this.canvas.width, this.canvas.height);
+      const p1 = this.transformedPoint(0, 0);
+      const p2 = this.transformedPoint(this.canvas.width, this.canvas.height);
+      this.ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
     },
-    mouseWheel(e) {
-      this.zoomRatio += e.wheelDelta * 0.0001;
+    zoom(isZoomUp) {
+      const point = this.transformedPoint(this.last.x, this.last.y);
+
+      this.xform = this.xform.translate(point.x, point.y);
+      this.ctx.translate(point.x, point.y);
+
+      const baseFactor = 1.1;
+      const factor = isZoomUp ? 1 / baseFactor : baseFactor;
+
+      console.log(factor, this.xform);
+      this.xform = this.xform.scaleNonUniform(factor, factor);
+      console.log(factor, this.xform);
+      this.ctx.scale(factor, factor);
+
+      this.xform = this.xform.translate(-point.x, -point.y);
+      this.ctx.translate(-point.x, -point.y);
+
       this.draw();
     },
+    mouseWheel(e) {
+      this.zoom(e.wheelDelta > 0);
+    },
     mouseDown(e) {
-      this.startDragPos = {
-        x: e.offsetX,
-        y: e.offsetY,
-      };
+      this.last.x = e.offsetX || (e.pageX - this.canvas.offsetLeft);
+      this.last.y = e.offsetY || (e.pageY - this.canvas.offsetTop);
+      this.startDragPos = this.transformedPoint(this.last.x, this.last.y);
     },
     mouseMove(e) {
       if (this.dragging) {
-        const x = (e.offsetX - this.startDragPos.x);
-        const y = (e.offsetY - this.startDragPos.y);
-        Vue.set(this.offset, 'x', x);
-        Vue.set(this.offset, 'y', y);
+        this.last.x = e.offsetX || (e.pageX - this.canvas.offsetLeft);
+        this.last.y = e.offsetY || (e.pageY - this.canvas.offsetTop);
+        const point = this.transformedPoint(this.last.x, this.last.y);
+
+        const dx = point.x - this.startDragPos.x;
+        const dy = point.y - this.startDragPos.y;
+        this.xform = this.xform.translate(dx, dy);
+        this.ctx.translate(dx, dy);
 
         this.draw();
       }
@@ -107,7 +126,7 @@ export default {
   data: () => ({
     startDragPos: null,
     zoomRatio: 1,
-    offset: {
+    last: {
       x: 0,
       y: 0,
     },
