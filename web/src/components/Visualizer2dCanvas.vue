@@ -34,6 +34,10 @@ export default {
       type: Array,
       required: true,
     },
+    scaleFactor: {
+      type: Number,
+      required: true,
+    },
   },
   mounted() {
     this.wrapper = new Canvas2DWrapper(this.$refs.visualizer2d);
@@ -100,6 +104,13 @@ export default {
     },
     mouseUp() {
       this.startDragPos = null;
+    },
+  },
+  watch: {
+    scaleFactor(newVal, oldVal) {
+      const factor = newVal / oldVal;
+      this.wrapper.zoom(this.last, factor);
+      this.draw();
     },
   },
   data: () => ({
