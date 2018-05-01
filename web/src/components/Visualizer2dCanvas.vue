@@ -1,12 +1,14 @@
 <template>
-  <canvas
-    id='visualizer2d'
-    ref='visualizer2d'
-    width="800"
-    height="400"
-    @mousewheel='mouseWheel'
-    v-hammer:pan="handlePan"
-    v-hammer:panstart="handlePanStart" />
+  <div
+    id='canvas-wrapper'
+    ref='canvasWrapper'>
+    <canvas
+      id='visualizer2d'
+      ref='visualizer2d'
+      @mousewheel='mouseWheel'
+      v-hammer:pan="handlePan"
+      v-hammer:panstart="handlePanStart" />
+  </div>
 </template>
 
 <script>
@@ -39,6 +41,8 @@ export default {
   },
   mounted() {
     this.wrapper = new Canvas2DWrapper(this.$refs.visualizer2d);
+    this.wrapper.canvas.width = this.$refs.canvasWrapper.clientWidth;
+    this.wrapper.canvas.height = this.$refs.canvasWrapper.clientHeight;
 
     this.last.x = this.wrapper.canvas.width / 2;
     this.last.y = this.wrapper.canvas.height / 2;
@@ -62,8 +66,8 @@ export default {
       const { width, height } = this.icon;
       const factor = this.wrapper.getScaleFactor();
       this.names.forEach((name, i) => {
-        const dx = (xs[i] * this.wrapper.canvas.width);
-        const dy = (ys[i] * this.wrapper.canvas.height);
+        const dx = (xs[i] * (this.wrapper.canvas.width - width));
+        const dy = (ys[i] * (this.wrapper.canvas.height - height));
 
         const { top, left } = calcPos(this.poke2num.get(name));
         this.wrapper.ctx.drawImage(this.miniIcons,
@@ -139,3 +143,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media (min-width: 768px) {
+  #canvas-wrapper {
+    width: 750px;
+    height: 375px;
+  }
+}
+</style>
