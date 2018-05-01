@@ -90,7 +90,7 @@
   },
   "browserslist": [
     "> 1%",
-    "last 2 versions",
+    "last 6 versions",
     "not ie <= 8"
   ]
 }
