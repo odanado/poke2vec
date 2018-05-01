@@ -41,8 +41,7 @@ export default {
   },
   mounted() {
     this.wrapper = new Canvas2DWrapper(this.$refs.visualizer2d);
-    this.wrapper.canvas.width = this.$refs.canvasWrapper.clientWidth;
-    this.wrapper.canvas.height = this.$refs.canvasWrapper.clientHeight;
+    this.resize();
 
     this.last.x = this.wrapper.canvas.width / 2;
     this.last.y = this.wrapper.canvas.height / 2;
@@ -54,11 +53,6 @@ export default {
     };
   },
   methods: {
-    transformedPoint(x, y) {
-      this.point.x = x;
-      this.point.y = y;
-      return this.point.matrixTransform(this.xform.inverse());
-    },
     draw() {
       this.reset();
 
@@ -83,6 +77,10 @@ export default {
 
       this.wrapper.ctx.strokeStyle = 'rgb(00,00,255)';
       this.wrapper.ctx.strokeRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+    },
+    resize() {
+      this.wrapper.canvas.width = this.$refs.canvasWrapper.clientWidth;
+      this.wrapper.canvas.height = this.$refs.canvasWrapper.clientHeight;
     },
     mouseWheel(e) {
       this.$emit('handleZoom', { isZoomIn: e.wheelDelta < 0 });
