@@ -5,9 +5,10 @@
     <canvas
       id='visualizer2d'
       ref='visualizer2d'
-      @mousewheel='mouseWheel'
       v-hammer:pan="handlePan"
-      v-hammer:panstart="handlePanStart" />
+      v-hammer:panstart="handlePanStart"
+      v-hammer:pinch="handlePinch"
+      @mousewheel='handleMouseWheel' />
   </div>
 </template>
 
@@ -82,8 +83,11 @@ export default {
       this.wrapper.canvas.width = this.$refs.canvasWrapper.clientWidth;
       this.wrapper.canvas.height = this.$refs.canvasWrapper.clientHeight;
     },
-    mouseWheel(e) {
+    handleMouseWheel(e) {
       this.$emit('handleZoom', { isZoomIn: e.wheelDelta < 0 });
+    },
+    handlePinch(e) {
+      this.$emit('handleZoom', { isZoomIn: e.additionalEvent === 'pinchout' });
     },
     handlePanStart(e) {
       this.last = this.wrapper.transformedPoint(e.deltaX, e.deltaY);
