@@ -5,11 +5,14 @@ import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
 import 'material-design-icons/iconfont/material-icons.css';
 
+import { VueHammer } from 'vue2-hammer';
+
 import App from './App';
 import router from './router';
 
 
 Vue.use(Vuetify);
+Vue.use(VueHammer);
 
 Vue.config.productionTip = false;
 

@@ -1,17 +1,15 @@
 <template>
   <canvas
-    width="800"
-    height="400"
     id='visualizer2d'
     ref='visualizer2d'
+    width="800"
+    height="400"
     @mousewheel='mouseWheel'
-    @mousedown='mouseDown'
-    @mousemove='mouseMove'
-    @mouseup='mouseUp' />
+    v-hammer:pan="handlePan"
+    v-hammer:panstart="handlePanStart" />
 </template>
 
 <script>
-
 import Canvas2DWrapper from '@/modules/canvas_2d_wrapper';
 
 const poke2numOriginal = require('@/data/poke2num');
@@ -78,32 +76,24 @@ export default {
       const p2 = this.wrapper.transformedPoint(
         this.wrapper.canvas.width, this.wrapper.canvas.height);
       this.wrapper.ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+
+      this.wrapper.ctx.strokeStyle = 'rgb(00,00,255)';
+      this.wrapper.ctx.strokeRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
     },
     mouseWheel(e) {
-      const factor = e.wheelDelta > 0 ? 1 / this.baseFactor : this.baseFactor;
-      this.wrapper.zoom(this.last, factor);
+      this.$emit('handleZoom', { isZoomIn: e.wheelDelta < 0 });
+    },
+    handlePanStart(e) {
+      this.last = this.wrapper.transformedPoint(e.deltaX, e.deltaY);
+    },
+    handlePan(e) {
+      const point = this.wrapper.transformedPoint(e.deltaX, e.deltaY);
+      const dx = point.x - this.last.x;
+      const dy = point.y - this.last.y;
+
+      this.wrapper.translate(dx, dy);
+
       this.draw();
-    },
-    mouseDown(e) {
-      this.last.x = e.offsetX || (e.pageX - this.canvas.offsetLeft);
-      this.last.y = e.offsetY || (e.pageY - this.canvas.offsetTop);
-      this.startDragPos = this.wrapper.transformedPoint(this.last.x, this.last.y);
-    },
-    mouseMove(e) {
-      if (this.dragging) {
-        this.last.x = e.offsetX || (e.pageX - this.canvas.offsetLeft);
-        this.last.y = e.offsetY || (e.pageY - this.canvas.offsetTop);
-        const point = this.wrapper.transformedPoint(this.last.x, this.last.y);
-
-        const dx = point.x - this.startDragPos.x;
-        const dy = point.y - this.startDragPos.y;
-        this.wrapper.translate(dx, dy);
-
-        this.draw();
-      }
-    },
-    mouseUp() {
-      this.startDragPos = null;
     },
   },
   watch: {

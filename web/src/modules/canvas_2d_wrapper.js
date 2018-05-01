@@ -15,6 +15,18 @@ export default class Canvas2DWrapper {
     this.xform = this.xform.translate(x, y);
     this.ctx.translate(x, y);
   }
+  transform(angle, dx, dy) {
+    const rad = (angle * Math.PI) / 180;
+    const mtx = this.svg.createSVGMatrix();
+    mtx.a = Math.cos(rad);
+    mtx.b = Math.sin(rad);
+    mtx.c = -Math.sin(rad);
+    mtx.d = Math.cos(rad);
+    mtx.e = dx;
+    mtx.f = dy;
+    this.xform = this.xform.multiply(mtx);
+    this.ctx.setTransform(Math.cos(rad), Math.sin(rad), -Math.sin(rad), Math.cos(rad), dx, dy);
+  }
   scale(factor) {
     this.xform = this.xform.scaleNonUniform(factor, factor);
     this.ctx.scale(factor, factor);
