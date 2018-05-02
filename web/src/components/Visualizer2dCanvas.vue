@@ -150,7 +150,12 @@ export default {
 @media (min-width: 768px) {
   #canvas-wrapper {
     width: 750px;
-    height: 375px;
+    height: 70vh;
+  }
+}
+@media (max-width: 768px) {
+  #canvas-wrapper {
+    height: 50vh;
   }
 }
 </style>
