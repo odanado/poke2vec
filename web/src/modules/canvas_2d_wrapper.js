@@ -41,4 +41,10 @@ export default class Canvas2DWrapper {
   getScaleFactor() {
     return { x: this.xform.a, y: this.xform.d };
   }
+  resetPosition() {
+    // const inv = this.xform.inverse();
+    // this.ctx.transform(inv.a, inv.b, inv.c, inv.d, inv.e, inv.f);
+    // this.xform = this.xform.multiply(inv);
+    this.translate(-this.xform.e, -this.xform.f);
+  }
 }

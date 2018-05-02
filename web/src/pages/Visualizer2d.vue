@@ -2,20 +2,22 @@
   <div>
     <v-layout>
       <v-slider
-        v-model="zoomScaleFactor"
-        ref="zoomScaleFactorSlider"
-        label="zoom"
+        v-model="canvasScaleFactor"
+        @input="inputScaleFactor"
+        label="ズーム"
         thumb-label
         min="1"
-        max="5"
-        step="0.5"/>
-      <v-btn small>リセット</v-btn>
+        max="10"
+        step="0.1"/>
+      <v-btn
+        small
+        @click="resetCanvas">リセット</v-btn>
     </v-layout>
 
     <Visualizer2dCanvas
+      ref="canvas"
       :poke2vec="poke2vec"
-      :scale-factor="zoomScaleFactor"
-      @handleZoom="handleZoom"
+      @changeScaleFactor="changeScaleFactor"
     />
   </div>
 </template>
@@ -31,25 +33,21 @@ export default {
     Visualizer2dCanvas,
   },
   methods: {
-    handleZoom({ isZoomIn }) {
-      const { zoomScaleFactorSlider } = this.$refs;
-      let factor = this.zoomScaleFactor;
-
-      if (isZoomIn) {
-        factor += Number(zoomScaleFactorSlider.step);
-      } else {
-        factor -= Number(zoomScaleFactorSlider.step);
-      }
-
-      factor = Math.max(factor, Number(zoomScaleFactorSlider.min));
-      factor = Math.min(factor, Number(zoomScaleFactorSlider.max));
-
-      this.zoomScaleFactor = factor;
+    changeScaleFactor(scaleFactor) {
+      this.canvasScaleFactor = scaleFactor;
+    },
+    inputScaleFactor(val) {
+      this.$refs.canvas.changeScaleFactor(val, false);
+      this.$refs.canvas.draw();
+    },
+    resetCanvas() {
+      this.$refs.canvas.reset();
+      this.$refs.canvas.draw();
     },
   },
   data: () => ({
     poke2vec,
-    zoomScaleFactor: 1,
+    canvasScaleFactor: 1,
   }),
 };
 </script>

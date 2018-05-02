@@ -35,17 +35,10 @@ export default {
       type: Array,
       required: true,
     },
-    scaleFactor: {
-      type: Number,
-      required: true,
-    },
   },
   mounted() {
     this.wrapper = new Canvas2DWrapper(this.$refs.visualizer2d);
     this.resize();
-
-    this.last.x = this.wrapper.canvas.width / 2;
-    this.last.y = this.wrapper.canvas.height / 2;
 
     this.miniIcons = new Image();
     this.miniIcons.src = '/static/smicons-sheet.png';
@@ -55,7 +48,7 @@ export default {
   },
   methods: {
     draw() {
-      this.reset();
+      this.clear();
 
       const { xs, ys } = this.vectors;
       const { width, height } = this.icon;
@@ -70,49 +63,63 @@ export default {
           dx, dy, width / factor.x, height / factor.y);
       });
     },
-    reset() {
+    clear() {
       const p1 = this.wrapper.transformedPoint(0, 0);
       const p2 = this.wrapper.transformedPoint(
         this.wrapper.canvas.width, this.wrapper.canvas.height);
       this.wrapper.ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
 
       this.wrapper.ctx.strokeStyle = 'rgb(00,00,255)';
+      this.wrapper.ctx.lineWidth = 1.0 / this.scaleFactor;
       this.wrapper.ctx.strokeRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+    },
+    reset() {
+      this.changeScaleFactor(1.0);
+      this.wrapper.resetPosition();
+      this.draw();
     },
     resize() {
       this.wrapper.canvas.width = this.$refs.canvasWrapper.clientWidth;
       this.wrapper.canvas.height = this.$refs.canvasWrapper.clientHeight;
+
+      this.centor.x = this.wrapper.canvas.width / 2;
+      this.centor.y = this.wrapper.canvas.height / 2;
+    },
+    changeScaleFactor(factor, emit = true) {
+      const oldVal = this.scaleFactor;
+      this.scaleFactor = Math.min(Math.max(1, factor), 10);
+      if (emit) {
+        this.$emit('changeScaleFactor', this.scaleFactor);
+      }
+
+      this.wrapper.zoom(this.centor, this.scaleFactor / oldVal);
     },
     handleMouseWheel(e) {
-      this.$emit('handleZoom', { isZoomIn: e.wheelDelta < 0 });
+      const scale = e.wheelDelta < 0 ? 1.1 : 0.9;
+      this.changeScaleFactor(this.scaleFactor * scale);
+      this.draw();
     },
     handlePinch(e) {
-      this.$emit('handleZoom', { isZoomIn: e.additionalEvent === 'pinchout' });
+      this.changeScaleFactor(this.scaleFactor * e.scale);
+      this.draw();
     },
     handlePanStart(e) {
-      this.last = this.wrapper.transformedPoint(e.deltaX, e.deltaY);
+      this.panStartPos = this.wrapper.transformedPoint(e.deltaX, e.deltaY);
     },
     handlePan(e) {
       const point = this.wrapper.transformedPoint(e.deltaX, e.deltaY);
-      const dx = point.x - this.last.x;
-      const dy = point.y - this.last.y;
+      const dx = point.x - this.panStartPos.x;
+      const dy = point.y - this.panStartPos.y;
 
       this.wrapper.translate(dx, dy);
 
       this.draw();
     },
   },
-  watch: {
-    scaleFactor(newVal, oldVal) {
-      const factor = newVal / oldVal;
-      this.wrapper.zoom(this.last, factor);
-      this.draw();
-    },
-  },
   data: () => ({
-    startDragPos: null,
-    baseFactor: 1.1,
-    last: {
+    scaleFactor: 1.0,
+    panStartPos: null,
+    centor: {
       x: 0,
       y: 0,
     },
