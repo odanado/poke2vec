@@ -1,21 +1,16 @@
 <template>
   <div>
-    <SelectPoke2vecModel
-      :poke2vec-models="poke2vecModels"
-      @changeModel="changePoke2vecModel"
-    />
     <v-layout>
-      <v-slider
-        v-model="canvasScaleFactor"
-        @input="inputScaleFactor"
-        label="ズーム"
-        thumb-label
-        min="1"
-        max="10"
-        step="0.1"/>
-      <v-btn
-        small
-        @click="resetCanvas">リセット</v-btn>
+      <SelectPoke2vecModel
+        :poke2vec-models="poke2vecModels"
+        @changeModel="changePoke2vecModel"
+      />
+
+      <div style="padding-top: 18px">
+        <v-btn
+          small
+          @click="resetCanvas">リセット</v-btn>
+      </div>
     </v-layout>
 
     <Visualizer2dCanvas
@@ -39,7 +34,7 @@ const poke2vecs = new Map(Object.entries({
 /* eslint-enable global-require */
 export default {
   created() {
-    this.selectedPoke2vecModel = this.poke2vecModels[1];
+    this.selectedPoke2vecModel = this.poke2vecModels[0];
   },
   components: {
     Visualizer2dCanvas,
@@ -76,7 +71,7 @@ export default {
     selectedPoke2vecModel: null,
     canvasScaleFactor: 1,
     poke2vecModels: [
-      { text: 'VGC2018 64次元', value: 'pca_2d_gen7vgc2018_ns_64' },
+      { text: 'VGC2018 2次元', value: 'pca_2d_gen7vgc2018_ns_64' },
       { text: 'シングルバトル 2次元', value: 'pca_2d_gen7battlespotsingles_ns_64' },
     ],
   }),

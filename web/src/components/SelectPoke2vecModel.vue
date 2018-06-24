@@ -16,6 +16,9 @@ export default {
       required: true,
     },
   },
+  mounted() {
+    this.selectedModel = this.poke2vecModels[0];
+  },
   data: () => ({
     selectedModel: null,
   }),

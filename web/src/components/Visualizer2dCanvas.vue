@@ -95,6 +95,10 @@ export default {
       this.wrapper.zoom(this.centor, this.scaleFactor / oldVal);
     },
     handleMouseWheel(e) {
+      if (Math.abs(e.deltaY) < 0.4) {
+        // macのトラックパッドの慣性スクロール
+        return;
+      }
       const scale = e.wheelDelta < 0 ? 1.1 : 0.9;
       this.changeScaleFactor(this.scaleFactor * scale);
       this.draw();
