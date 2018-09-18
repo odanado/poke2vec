@@ -1,0 +1,13 @@
+[build]
+  base    = "web/"
+  command = "yarn run build"
+  publish = "dist"
+  [build.environment]
+    NODE_VERSION = "10.8.0"
+    NPM_VERSION = "6.3.0"
+    YARN_VERSION = "1.9.4"
+
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
