@@ -17,6 +17,8 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "material-design-icons": "^3.0.1",
+    "three": "^0.96.0",
+    "three-orbit-controls": "^82.1.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue2-hammer": "^1.0.6",
