@@ -9,6 +9,7 @@ import VueAnalytics from 'vue-analytics';
 
 
 import { VueHammer } from 'vue2-hammer';
+import router from './router';
 
 import App from './App';
 import router from './router';
@@ -18,6 +19,7 @@ Vue.use(Vuetify);
 Vue.use(VueHammer);
 Vue.use(VueAnalytics, {
   id: 'UA-49269757-15',
+  router,
 });
 
 Vue.config.productionTip = false;
