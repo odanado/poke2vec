@@ -9,7 +9,7 @@
       <v-flex
         xs4>
         <v-select
-          :items="poke2vecItems"
+          :items="poke2vecModels"
           v-model="selectedPoke2vec"
           return-object
           label="ルール"
@@ -68,7 +68,7 @@ const poke2vecs = new Map(Object.entries({
 
 export default {
   created() {
-    this.selectedPoke2vec = this.poke2vecItems[0];
+    this.selectedPoke2vec = this.poke2vecModels[0];
     this.selectedOrder = this.orderItems[0];
   },
   components: {
@@ -95,7 +95,7 @@ export default {
     topN: 50,
     // range(10, 101, 10)
     topNRange: [...Array(10).keys()].map(x => (x + 1) * 10),
-    poke2vecItems: [
+    poke2vecModels: [
       { text: 'VGC2018 64次元', value: 'gen7vgc2018_ns_64' },
       { text: 'シングルバトル 64次元', value: 'gen7battlespotsingles_ns_64' },
     ],
