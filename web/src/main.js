@@ -9,8 +9,6 @@ import VueAnalytics from 'vue-analytics';
 
 
 import { VueHammer } from 'vue2-hammer';
-import router from './router';
-
 import App from './App';
 import router from './router';
 
