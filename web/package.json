@@ -20,6 +20,7 @@
     "three": "^0.96.0",
     "three-orbit-controls": "^82.1.0",
     "vue": "^2.5.2",
+    "vue-analytics": "^5.16.0",
     "vue-router": "^3.0.1",
     "vue2-hammer": "^1.0.6",
     "vuetify": "^1.0.14"
