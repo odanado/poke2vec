@@ -8,6 +8,7 @@ import Visualizer3d from '@/pages/Visualizer3d';
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
