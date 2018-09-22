@@ -8,12 +8,19 @@ module.exports = {
     parser: 'babel-eslint'
   },
   extends: [
+    'airbnb-base',
     'plugin:vue/recommended',
+    'prettier',
   ],
   // required to lint *.vue files
   plugins: [
     'vue'
   ],
   // add your custom rules here
-  rules: {}
+  rules: {},
+  settings: {
+    "import/resolver": {
+      "nuxt-import": {}
+    }
+  }
 }

@@ -10,6 +10,7 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "format": "prettier-eslint --write \"./**/*.js\" \"./**/*.vue\" --ignore \"./node_modules/**\"",
     "precommit": "npm run lint"
   },
   "dependencies": {
@@ -18,11 +19,16 @@
     "vuetify": "^1.1.0"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0",
     "babel-eslint": "^8.2.1",
     "eslint": "^5.0.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-import-resolver-nuxt-import": "^0.0.1",
     "eslint-loader": "^2.0.0",
+    "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-vue": "^4.0.0",
+    "nodemon": "^1.11.0",
+    "prettier-eslint-cli": "^4.7.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1"
   }
